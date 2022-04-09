@@ -1,0 +1,57 @@
+Currency: Loveca stones
+Earning:
+-Checking in daily (5 loveca)
+-Adding a song to the queue (10 loveca)
+
+Cards will be sorted in these categories:
+-Number: card number in database
+-Rarity: UR, SSR, SR, R, N, and Limited UR(autographed URs, not sure what about series that aren't Love Live)
+-Name: unique to each card
+-Character: yup
+-Set: what set it belongs to
+-Source: what series it comes from
+store images on imgur then store link to image in database
+
+Every series will contain:
+20 Normal cards
+One Initial set (characters in their normal outfits)
+Any set after that has to have a theme for cards to be grouped in a set
+After maybe 10 sets restrictions of rarities in sets will relax
+-Just avoid solely adding URs like Love Live is doing right now.
+
+A set will contain:
+5 SRs
+2 SSRs
+2 URs
+SSRs are optional but there has to be more SRs than URs
+
+Limited URs can be released without set.
+
+Gacha rates:
+0.05% Limited UR
+0.95% UR
+4% SSR
+15% SR
+30% R
+50% N
+
+-Guaranteed SR or higher rates:
+1% Limited UR
+2% UR
+6% SSR
+91% SR
+
+Gacha pull prices:
+-5 loveca for single pull
+-50 for 10+1 pull, one card SR or higher guaranteed
+-How to implement this:
+--Random number for each pull then choose which pool of cards to pick from
+
+Features outside of Gacha:
+-Trading (bot sends dm to user with trade offer from another user)
+-Display box (showing off favorite cards obtained)
+-Selling duplicates after every roll
+    -though should i count duplicates to begin with?
+
+Extra notes:
+-Would need two different databases, one to hold info about users, the other to hold card info
