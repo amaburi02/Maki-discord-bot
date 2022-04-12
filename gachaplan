@@ -55,3 +55,6 @@ Features outside of Gacha:
 
 Extra notes:
 -Would need two different databases, one to hold info about users, the other to hold card info
+
+Database for individual users
+Id, number of song queues, number of messages, loveca count
