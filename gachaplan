@@ -11,9 +11,11 @@ Cards will be sorted in these categories:
 -Set: what set it belongs to
 -Source: what series it comes from
 store images on imgur then store link to image in database
+Card title formatting:
+(Rarity)"Name" Character [Set]
 
 Every series will contain:
-20 Normal cards
+At least 20 Normal cards
 One Initial set (characters in their normal outfits)
 Any set after that has to have a theme for cards to be grouped in a set
 After maybe 10 sets restrictions of rarities in sets will relax
@@ -25,7 +27,7 @@ A set will contain:
 2 URs
 SSRs are optional but there has to be more SRs than URs
 
-Limited URs can be released without set.
+Limited URs can be released without set, they are pretty much existing URs with an autograph on it.
 
 Gacha rates:
 0.05% Limited UR
@@ -35,11 +37,19 @@ Gacha rates:
 30% R
 50% N
 
+Revised 4/13/2022:
+1% Limited UR
+4% UR
+5% SSR
+15% SR
+30% R
+45% N
+
 -Guaranteed SR or higher rates:
 1% Limited UR
-2% UR
-6% SSR
-91% SR
+4% UR
+15% SSR
+80% SR
 
 Gacha pull prices:
 -5 loveca for single pull
@@ -54,7 +64,9 @@ Features outside of Gacha:
     -though should i count duplicates to begin with?
 
 Extra notes:
--Would need two different databases, one to hold info about users, the other to hold card info
+-Would need two different tables, one to hold info about users, the other to hold card info
 
 Database for individual users
-Id, number of song queues, number of messages, loveca count
+# in table, userId, number of song queues, number of messages, loveca count
+Database for cards in google sheets
+Database for card inventory is .json file

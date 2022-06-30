@@ -4,6 +4,7 @@ import youtube_dl
 from youtube_dl import YoutubeDL
 import urllib.request
 import re
+import random
 from musicFunctions import songQueue, previouslyPlayed, currentlyPlaying, moveURL, moveURLback, playQueue, printLists
 
 FFMPEG_OPTIONS = {
@@ -19,10 +20,6 @@ class musicCommands(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command()
-    async def music(self, ctx):
-        await ctx.send("Work in progress")
 
     @commands.command()
     async def getinthevcshinji(self, ctx):
@@ -203,6 +200,11 @@ class musicCommands(commands.Cog):
                 vc.play(source, after=lambda e: playQueue(ctx))
 
     @commands.command()
+    async def showqueue(self,ctx):
+        print(len(songQueue))
+        await ctx.send("There are " + str(len(songQueue)) + " links in the queue")
+
+    @commands.command()
     async def deletenext(self, ctx):
         songQueue.pop(0)
         await ctx.send("Next song has been deleted")
@@ -278,3 +280,19 @@ class musicCommands(commands.Cog):
         #await ctx.send("Want to add this to the queue?")
         #else:
         #await ctx.send("I don't understand your response.")
+
+    @commands.command()
+    async def playlist(self,ctx,url):
+        html = urllib.request.urlopen(url)
+        video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+        video_ids = list(dict.fromkeys(video_ids))
+        print(video_ids)
+        i = 0
+        length = len(video_ids)
+        while i <= length:
+            songQueue.append("https://www.youtube.com/watch?v=" + video_ids[i])
+            i += 1
+            if (i == length):
+                break
+        print(songQueue)
+        await ctx.send("Playlist added to queue")
