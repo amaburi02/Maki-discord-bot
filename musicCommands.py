@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
+from discord.ui import Button, View
+from musicFunctions import songQueue, previouslyPlayed, currentlyPlaying, printLists, moveURL, moveURLback, playQueue
 import youtube_dl
-from youtube_dl import YoutubeDL
 import urllib.request
 import re
 import random
-from musicFunctions import songQueue, previouslyPlayed, currentlyPlaying, moveURL, moveURLback, playQueue, printLists
 
 FFMPEG_OPTIONS = {
     'before_options':
@@ -13,8 +13,6 @@ FFMPEG_OPTIONS = {
     'options': '-vn'
 }
 YDL_OPTIONS = {'format': 'bestaudio', 'ignoreerrors': True}
-
-isLooping = False
 
 class musicCommands(commands.Cog):
 
@@ -115,41 +113,40 @@ class musicCommands(commands.Cog):
     async def loop(self, ctx, url):
         ctx.voice_client.stop()
         vc = ctx.voice_client
-        isLooping = True
+        savedQueue = []
+        end = 99
+        i = 0
+
+        if songQueue:
+            savedQueue = songQueue.copy()
+            songQueue.clear()
         if currentlyPlaying:
-            previouslyPlayed.append(currentlyPlaying[0])
+            previouslyPlayed.append(currentlyPlaying)
             currentlyPlaying.clear()
-        currentlyPlaying.append(url)
-        await ctx.send("Started loop")
-        while (isLooping == True):
+
+        songQueue.insert(0, url)
+        playQueue(ctx)
+        while i <= end:
             songQueue.append(url)
-            with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-                info = ydl.extract_info(currentlyPlaying[0], download=False)
-                url2 = info['formats'][0]['url']
-                source = await discord.FFmpegOpusAudio.from_probe(
-                    url2, **FFMPEG_OPTIONS)
-                vc.play(source, after=lambda e: playQueue(ctx))
-            #songQueue.append(url)
-            if (isLooping == False):
-                if songQueue[0] == url:
-                    songQueue.pop(0)
-                playQueue()
-                break
-            continue
+            i += 1
 
-    @commands.command()
-    async def stoploop(self, ctx):
-        isLooping = False
-        await ctx.send("Stopped loop")
+        button = Button(label="Stop", style=discord.ButtonStyle.primary)
+        view = View()
+        view.add_item(button)
 
-    @commands.command()
-    async def checkifloop(self, ctx):
-        if isLooping == True:
-            await ctx.send("Yes")
-        elif isLooping == False:
-            await ctx.send("No")
-        else:
-            await ctx.send("Error")
+        async def buttonCallback(interaction):
+            ctx.voice_client.stop()
+            for x in songQueue:
+                if (x == url):
+                    songQueue.remove(url)
+                elif (x != url):
+                    break
+                else:
+                    await ctx.send("Error")
+
+        button.callback = buttonCallback
+
+        await ctx.send("Press the button below to stop loop", view=view)
 
     @commands.command()
     async def addnext(self, ctx, url):
@@ -263,23 +260,36 @@ class musicCommands(commands.Cog):
         #print(video_ids)
         videoURL = "https://www.youtube.com/watch?v=" + video_ids[resultRank]
         await ctx.send(videoURL)
-        #await ctx.send("Keep searching?")
 
-        #def check(m):
-        ##return m.author == message.author and m.content.isstring()
-        #return m.content == "Yes" or "No"
-        #try:
-        #message = await self.wait_for('message', check = check, timeout = 30.0)
+        if not currentlyPlaying:
+            button = Button(label = "Play now", style = discord.ButtonStyle.primary)
+            view = View()
+            view.add_item(button)
 
-        #except asyncio.TimeoutError:
-        #await ctx.send("You took too long to respond")
+            async def buttonCallback(interaction):
+                print(ctx.author.id)
+                if interaction.user == ctx.author:
+                    songQueue.insert(0, videoURL)
+                    playQueue(ctx)
+                    await interaction.response.send_message("Now playing")
+                else:
+                    await interaction.response.send_message("You were not the one that searched this.")
 
-        #if message == "Yes":
-        #await ctx.send("Nice")
-        #elif message == "No":
-        #await ctx.send("Want to add this to the queue?")
-        #else:
-        #await ctx.send("I don't understand your response.")
+            button.callback = buttonCallback
+
+            await ctx.send("It looks like you're not playing anything currently, want to play this?", view = view)
+        else:
+            button = Button(label = "Add to queue", style = discord.ButtonStyle.primary)
+            view = View()
+            view.add_item(button)
+
+            async def buttonCallback(interaction):
+                songQueue.append(videoURL)
+                await interaction.response.send_message("Song added to queue")
+
+            button.callback = buttonCallback
+
+            await ctx.send("Want to add this to the queue?", view = view)
 
     @commands.command()
     async def playlist(self,ctx,url):
