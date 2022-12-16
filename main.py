@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import os
+import mysql.connector
 from dotenv import load_dotenv
 from musicCommands import musicCommands
 from economy import economy
@@ -9,6 +10,14 @@ from otherCommands import otherCommands
 load_dotenv()
 
 bot = commands.Bot(command_prefix='!', intents = discord.Intents.all())
+mydb = mysql.connector.connect(
+    host = 'localhost',
+    user = 'root',
+    password = 'root',
+    database = 'unit01'
+)
+
+cursor = mydb.cursor(dictionary = True)
 
 @bot.event
 async def on_ready():
@@ -26,14 +35,38 @@ async def on_ready():
     #else:
         #await ctx.reply('Hello!')
 
-#@bot.command()
-#async def database(ctx):
-    #db = sqlite3.connect('main.sqlite')
-    #cursor = db.cursor()
-    #cursor.execute(f"SELECT userID FROM economy WHERE # = 1")
-    #result = cursor.fetchone()
-    #print(result)
-    #cursor.close()
-    #db.close()
+@bot.command()
+async def userinfo(ctx):
+    cursor.execute(f"select * from User where userID = {ctx.author.id}")
+
+    rows = cursor.fetchall()
+    for row in rows:
+        await ctx.send("UserID: " + str(row["userID"]))
+        await ctx.send("Loveca: " + str(row["loveca"]))
+        await ctx.send("Blue Tickets: " + str(row["bt"]))
+
+@bot.command()
+async def register(ctx):
+    sql = "insert into User (userID, loveca, bt) values (%s, %s, %s)"
+    val = (ctx.author.id, "50", "0")
+    cursor.execute(sql, val)
+    await ctx.send("You are now registered!")
+
+@bot.command()
+async def bal(ctx):
+    cursor.execute(f"select loveca from User where userID = {ctx.author.id}")
+
+    rows = cursor.fetchall()
+    for row in rows:
+        await ctx.send("Loveca: " + str(row["loveca"]))
+
+@bot.command()
+async def cardimgtest(ctx):
+    cursor.execute(f"select img from Cards where cardID = 1")
+
+    rows = cursor.fetchall()
+    for row in rows:
+        await ctx.send(row["img"])
+
 
 bot.run(os.environ['TOKEN'])

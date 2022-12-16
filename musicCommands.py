@@ -147,6 +147,14 @@ class musicCommands(commands.Cog):
         button.callback = buttonCallback
 
         await ctx.send("Press the button below to stop loop", view=view)
+    
+    @commands.command()
+    async def viewqueue(self, ctx):
+        i = 0
+        await ctx.send("Queue:")
+        for x in songQueue:
+            await ctx.send("<" + songQueue[i] + ">")
+            i += 1
 
     @commands.command()
     async def addnext(self, ctx, url):

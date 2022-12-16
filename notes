@@ -1,23 +1,2 @@
-code to make database:
-    db = sqlite3.connect('main.sqlite')
-    cursor = db.cursor()
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS main(
-    Name TEXT,
-    NumSongQueue TEXT,
-    NumMessages TEXT,
-    LovecaAmount TEXT
-    )
-    ''')
-
 prevent non-moderators from using commands:
 ctx.message.author.guild_permissions.manage_messages
-
-import sqlite3
-
-db= sqlite3.connect('main.sqlite')
-cursor = db.cursor()
-cursor.execute(f"SELECT Name FROM main WHERE authorID = {ctx.message.author.id}")
-result = cursor.fetchone()
-if result is None:
-    sql = ("INSERT INTO main("
