@@ -5,6 +5,8 @@ import mysql.connector
 from dotenv import load_dotenv
 from musicCommands import musicCommands
 from economy import economy
+from llsif import llsif
+from monopoly import monopoly
 from otherCommands import otherCommands
 
 load_dotenv()
@@ -24,6 +26,8 @@ async def on_ready():
     await bot.add_cog(musicCommands(bot))
     await bot.add_cog(otherCommands(bot))
     await bot.add_cog(economy(bot))
+    await bot.add_cog(llsif(bot))
+    await bot.add_cog(monopoly(bot))
     print('{0.user} launching...'.format(bot))
     return await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="a cassette tape"))
 
@@ -34,6 +38,15 @@ async def on_ready():
         #await ctx.reply('Hello Sherry!')
     #else:
         #await ctx.reply('Hello!')
+
+@bot.command()
+async def username(ctx):
+    id = ctx.author.id
+    user = bot.get_user(id)
+    if user is not None:
+        await ctx.send(f"The username for ID {id} is {user.name}.")
+    else:
+        await ctx.send(f"User with ID {id} not found.")
 
 @bot.command()
 async def userinfo(ctx):
@@ -67,6 +80,15 @@ async def cardimgtest(ctx):
     rows = cursor.fetchall()
     for row in rows:
         await ctx.send(row["img"])
+
+@bot.command()
+async def shutdown(ctx):
+    authorID = ctx.message.author.id
+    if authorID == 600444714856218634:
+        await ctx.reply("Shutting down")
+        await ctx.bot.close()
+    else:
+        await ctx.reply("Only the server owner can use this command")
 
 
 bot.run(os.environ['TOKEN'])

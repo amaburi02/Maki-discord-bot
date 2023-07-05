@@ -48,7 +48,7 @@ class otherCommands(commands.Cog):
                        "!search wowaka (returns top result) "
                        "\n !search wowaka 3 (returns fourth result from youtube) "
                        "\n !diceroll 2 (rolls two dice, meaning it picks a random number from 2 to 12)```")
-        await ctx.send("New feature 6/23/2022: !playlist added which will add a youtube playlist the queue but only the first 8 videos for some reason \n !showqueue will tell you how many links are in the queue")
+        await ctx.send("New feature 6/23/2022: !playlist added which will add a youtube playlist to the queue \n !showqueue will tell you how many links are in the queue")
 
     @commands.command()
     async def codegeasswatchorder(self, ctx):
