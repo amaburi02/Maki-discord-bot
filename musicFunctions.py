@@ -8,7 +8,6 @@ songQueue = []
 previouslyPlayed = []
 currentlyPlaying = []
 
-
 def printLists():
     print("Previously Played: ", previouslyPlayed)
     print("Currently Playing: ", currentlyPlaying)
