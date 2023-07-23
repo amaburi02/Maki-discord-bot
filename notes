@@ -1,2 +1,0 @@
-prevent non-moderators from using commands:
-ctx.message.author.guild_permissions.manage_messages

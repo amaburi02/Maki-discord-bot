@@ -81,14 +81,4 @@ async def cardimgtest(ctx):
     for row in rows:
         await ctx.send(row["img"])
 
-@bot.command()
-async def shutdown(ctx):
-    authorID = ctx.message.author.id
-    if authorID == 600444714856218634:
-        await ctx.reply("Shutting down")
-        await ctx.bot.close()
-    else:
-        await ctx.reply("Only the server owner can use this command")
-
-
 bot.run(os.environ['TOKEN'])

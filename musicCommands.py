@@ -20,9 +20,9 @@ class musicCommands(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def getinthevcshinji(self, ctx):
+    async def join(self, ctx):
         if ctx.author.voice is None:
-            await ctx.send("You are (not) in a voice channel")
+            await ctx.send("You are not in a voice channel")
         voice_channel = ctx.author.voice.channel
         if ctx.voice_client is None:
             await voice_channel.connect()
@@ -32,8 +32,6 @@ class musicCommands(commands.Cog):
     @commands.command()
     async def quit(self, ctx):
         await ctx.voice_client.disconnect()
-
-#'-nostdin' <- don't know what this is
 
     @commands.command()
     async def play(self, ctx, url):
@@ -196,7 +194,7 @@ class musicCommands(commands.Cog):
             currentlyPlaying.clear()
             currentlyPlaying.append(url)
             printLists()
-            moveURLback() #not sure why this is needed it moves urls forward by itself after working properly for some reason
+            moveURLback()
             with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
                 info = ydl.extract_info(currentlyPlaying[0], download=False)
                 url2 = info['formats'][0]['url']
